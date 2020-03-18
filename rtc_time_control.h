@@ -5,7 +5,6 @@ RTC_DS1307 rtc;
 
 struct time_compute
 {
-
   byte time_seconds_value1,
        time_seconds_value2,
        time_min_value1,
@@ -21,7 +20,12 @@ struct time_compute
 
 };
 
-struct time_h
+class time_h
 {
-    void initial_time_set(time_compute *);s
+  private:
+    short _hr;
+    short _min;
+
+  public:
+    void initial_time_set(time_compute *);
 };

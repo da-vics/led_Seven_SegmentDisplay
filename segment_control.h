@@ -2,14 +2,43 @@
 
 ///.......................................
 //>anode 7 segment display.....
-byte segA = 0; //Display pin A
-byte segB = 1; //Display pin b
-byte segC = 2; //Display pin c
-byte segD = 4; //Display pin d
-byte segE = 7; //Display pin e
-byte segF = 8; //Display pin f
-byte segG = 12; //Display pin g
-byte segDP = 3;// Display pin dot
+#define segA 0 //Display pin A
+#define segB 1 //Display pin b
+#define segC 2 //Display pin c
+#define segD 4 //Display pin d
+#define segE 7 //Display pin e
+#define segF 8 //Display pin f
+#define segG 12 //Display pin g
+#define segDP 3// Display pin dot
+
+// common cathode
+#define digit1 11  //Digit1
+#define digit2 10  //Digit2
+#define digit3 9   //Digit3
+#define digit4 6   //Digit4
+#define digit5 5  //Secs
+
+struct segment_states
+{
+  volatile byte  seconds_state = 0,  /// for second indicator digital state
+                 seconds1_state = 1,
+                 seconds2_state = 0,
+                 min1_state = 0,
+                 min2_state = 0,
+                 switch_seg = 0;
+
+  segment_states()
+  {
+    this->seconds_state = 0;  /// for second indicator digital state
+    this->seconds1_state = 1;
+    this->seconds2_state = 0;
+    this->min1_state = 0;
+    this->min2_state = 0;
+    this->switch_seg = 0;
+  }
+
+} segment_state;
+
 
 void lightNumber(const int &numberToDisplay)
 {

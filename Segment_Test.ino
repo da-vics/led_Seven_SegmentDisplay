@@ -5,28 +5,11 @@
 
 ///#define DEBUG
 
-// common cathode
-byte digit1 = 11;  //Digit1
-byte digit2 = 10;  //Digit2
-byte digit3 = 9;   //Digit3
-byte digit4 = 6;   //Digit4
-byte digit5 = 5;   //Secs
-
+time_compute time_now;
+time_h initiate_time;
 
 volatile int seconds_counter = 0, /// seconds  indicator
              time_min_count = 0;
-
-volatile byte seconds_state = 0,  /// for second indicator digital state
-              seconds1_state = 1,
-              seconds2_state = 0,
-              min1_state = 0,
-              min2_state = 0,
-              switch_seg = 0;
-
-volatile short time_seconds_value1 = 0,
-               time_seconds_value2 = 0,
-               time_min_value1 = 0,
-               time_min_value2 = 0;
 
 
 ISR (TIMER1_OVF_vect)
@@ -39,52 +22,52 @@ ISR (TIMER1_OVF_vect)
 
   if (seconds_counter >= 1000)
   {
-    seconds_state = !seconds_state;
-    ++time_seconds_value1;
+    segment_state.seconds_state = !segment_state.seconds_state;
+    ++time_now.time_seconds_value1;
     seconds_counter = 0;
   } ////
 
-  ++switch_seg;
-  if (switch_seg > 3)  switch_seg = 0;
+  ++segment_state.switch_seg;
+  if (segment_state.switch_seg > 3)  segment_state.switch_seg = 0;
 
-  switch (switch_seg)
+  switch (segment_state.switch_seg)
   {
     case 0:
-      seconds1_state = 1;
-      min1_state = 0;
-      seconds2_state = 0;
-      min2_state = 0;
+      segment_state.seconds1_state = 1;
+      segment_state.min1_state = 0;
+      segment_state.seconds2_state = 0;
+      segment_state.min2_state = 0;
       break;
 
     case 1:
-      seconds2_state = 1;
-      min1_state = 0;
-      seconds1_state = 0;
-      min2_state = 0;
+      segment_state.seconds2_state = 1;
+      segment_state.min1_state = 0;
+      segment_state.seconds1_state = 0;
+      segment_state.min2_state = 0;
       break;
 
     case 2:
-      min1_state = 1;
-      seconds2_state = 0;
-      seconds1_state = 0;
-      min2_state = 0;
+      segment_state.min1_state = 1;
+      segment_state.seconds2_state = 0;
+      segment_state.seconds1_state = 0;
+      segment_state.min2_state = 0;
       break;
 
     case 3:
-      min2_state = 1;
-      seconds2_state = 0;
-      min1_state = 0;
-      seconds1_state = 0;
+      segment_state.min2_state = 1;
+      segment_state.seconds2_state = 0;
+      segment_state.min1_state = 0;
+      segment_state.seconds1_state = 0;
       break;
 
   }
 
-  digitalWrite(digit5, seconds_state);  /// cursor
+  digitalWrite(digit5, segment_state.seconds_state);  /// cursor
 
-  digitalWrite(digit1, min2_state);
-  digitalWrite(digit2, min1_state);
-  digitalWrite(digit4, seconds1_state);
-  digitalWrite(digit3, seconds2_state);
+  digitalWrite(digit1, segment_state.min2_state);
+  digitalWrite(digit2, segment_state.min1_state);
+  digitalWrite(digit4, segment_state.seconds1_state);
+  digitalWrite(digit3, segment_state.seconds2_state);
 }
 
 void setup()
@@ -112,6 +95,8 @@ void setup()
   pinMode(digit5, OUTPUT);
 
   digitalWrite(segDP, HIGH); /// cursor control//
+
+  initiate_time.initial_time_set(&time_now);
 }
 
 void loop()
@@ -119,51 +104,51 @@ void loop()
 
 #ifdef DEBUG
   Serial.print("secs: ");
-  Serial.println(seconds_state);
+  Serial.println(segment_state.seconds_state);
   Serial.print("seconds1: ");
-  Serial.println(seconds1_state);
+  Serial.println(segment_state.seconds1_state);
   Serial.print("seconds2: ");
-  Serial.println(seconds2_state); m
+  Serial.println(segment_state.seconds2_state); m
 #endif
 
-  if (time_seconds_value1 > 9)
+  if (time_now.time_seconds_value1 > 9)
   {
-    time_seconds_value1 = 0;
-    ++time_seconds_value2;
+    time_now.time_seconds_value1 = 0;
+    ++time_now.time_seconds_value2;
 
-    if (time_seconds_value2 > 6)
+    if (time_now.time_seconds_value2 > 6)
     {
-      time_seconds_value2 = 0;
-      ++time_min_value1;
+      time_now.time_seconds_value2 = 0;
+      ++time_now.time_min_value1;
 
-      if (time_min_value1 > 9)
+      if (time_now.time_min_value1 > 9)
       {
-        time_min_value1 = 0;
-        ++time_min_value2;
+        time_now.time_min_value1 = 0;
+        ++time_now.time_min_value2;
       }///
 
     }///
 
   }////
 
-  if (seconds1_state)
+  if (segment_state.seconds1_state)
   {
-    lightNumber(time_seconds_value1);
+    lightNumber(time_now.time_seconds_value1);
   }
 
-  else if (seconds2_state)
+  else if (segment_state.seconds2_state)
   {
-    lightNumber(time_seconds_value2);
+    lightNumber(time_now.time_seconds_value2);
   }
 
-  else if (min1_state)
+  else if (segment_state.min1_state)
   {
-    lightNumber(time_min_value1);
+    lightNumber(time_now.time_min_value1);
   }
 
-  else if (min2_state)
+  else if (segment_state.min2_state)
   {
-    lightNumber(time_min_value2);
+    lightNumber(time_now.time_min_value2);
   }
 
 }///end of loop

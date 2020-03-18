@@ -8,26 +8,7 @@ void time_h::initial_time_set(time_compute *time_now)
 
   DateTime now = rtc.now();
 
-  /*
-    lcd.print(now.day(), DEC);
-    lcd.print('/');
-    lcd.print(now.month(), DEC);
-    lcd.print('/');
-    lcd.print(now.year(), DEC);
-  */
+  this->_hr = (int)now.hour() - 12; /// 12 hour system...
+  this->_min = (int)now.minute();
 
-
-  if (now.hour() > 12)
-  {
-
-    if ((now.hour() - 12) < 10) {
-    ///  lcd.print('0');
-    }
-
-   /// lcd.print(now.hour() - 12, DEC);
-
-  }
-  else {
-   /// lcd.print(now.hour(), DEC);
-  }
 }
