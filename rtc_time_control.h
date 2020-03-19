@@ -1,7 +1,6 @@
 #pragma once
 
 #include "RTClib.h"
-RTC_DS1307 rtc;
 
 struct time_compute
 {
@@ -28,4 +27,5 @@ class time_h
 
   public:
     void initial_time_set(time_compute *);
+    void count_timer(time_compute *);
 };
