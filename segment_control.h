@@ -22,22 +22,12 @@
 
 struct segment_states
 {
-  volatile byte seconds_state = 0, /// for second indicator digital state
-                seconds1_state = 0,
-                seconds2_state = 1,
-                min1_state = 0,
-                min2_state = 0,
-                switch_seg = 0;
-
-  segment_states()
-  {
-    this->seconds_state = 0; /// for second indicator digital state
-    this->seconds1_state = 1;
-    this->seconds2_state = 0;
-    this->min1_state = 0;
-    this->min2_state = 0;
-    this->switch_seg = 0;
-  }
+  volatile byte seconds_state{0}, /// for second indicator digital state
+                seconds1_state{0},
+                seconds2_state{1},
+                min1_state{0},
+                min2_state{0},
+                switch_seg{0};
 
 } segment_state;
 

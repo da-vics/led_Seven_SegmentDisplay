@@ -79,7 +79,7 @@ void setup()
   TCCR1B = (1 << CS12) | (1 << CS10); //set timer prescaler 1024 Prescalar selected
   TCNT1 = 65520;
 
-  Serial.begin(9600);
+  ///Serial.begin(9600);
 
   pinMode(segA, OUTPUT);
   pinMode(segB, OUTPUT);
