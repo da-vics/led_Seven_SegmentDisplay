@@ -23,8 +23,8 @@
 struct segment_states
 {
   volatile byte seconds_state = 0, /// for second indicator digital state
-                seconds1_state = 1,
-                seconds2_state = 0,
+                seconds1_state = 0,
+                seconds2_state = 1,
                 min1_state = 0,
                 min2_state = 0,
                 switch_seg = 0;

@@ -9,8 +9,7 @@ time_h initiate_time;
 segmentControl segContorl;
 
 volatile int seconds_counter = 0, /// seconds  indicator
-             time_min_count = 0;
-
+             seconds_counter2 = 0;
 
 ISR (TIMER1_OVF_vect)
 {
@@ -18,15 +17,17 @@ ISR (TIMER1_OVF_vect)
   TCNT1 = 65520;       /// 1 milli_seconds overflow
 
   ++seconds_counter;
-  ++time_min_count;
+  ++seconds_counter2;
 
   if (seconds_counter >= 1000)
   {
     segment_state.seconds_state = !segment_state.seconds_state;
     ++time_now.time_seconds_value1;
     seconds_counter = 0;
+    initiate_time.count_timer(&time_now);
   } ////
 
+  seconds_counter2 = 0;
   ++segment_state.switch_seg;
   if (segment_state.switch_seg > 3)  segment_state.switch_seg = 0;
 
@@ -68,6 +69,7 @@ ISR (TIMER1_OVF_vect)
   digitalWrite(digit2, segment_state.min1_state);
   digitalWrite(digit4, segment_state.seconds1_state);
   digitalWrite(digit3, segment_state.seconds2_state);
+
 }///<<
 
 void setup()
@@ -96,13 +98,11 @@ void setup()
 
   digitalWrite(segDP, HIGH); /// cursor control//
 
-  initiate_time.initial_time_set(&time_now);
+  ///initiate_time.initial_time_set(&time_now);
 }
 
 void loop()
 {
-
-  initiate_time.count_timer(&time_now);
   segContorl.switch_seg_States(&time_now);
 
 }///end of loop
