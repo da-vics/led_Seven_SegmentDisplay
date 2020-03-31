@@ -1,5 +1,4 @@
 #pragma once
-
 #include "rtc_time_control.h"
 
 ///.......................................
@@ -23,20 +22,20 @@
 struct segment_states
 {
   volatile byte seconds_state{0}, /// for second indicator digital state
-                seconds1_state{0},
-                seconds2_state{1},
-                min1_state{0},
-                min2_state{0},
-                switch_seg{0};
+           hour1_state{0},
+           hour2_state{0},
+           min1_state{1},
+           min2_state{0},
+           switch_seg{0},
+           switch_value{3},
+           switch_lowest{0};
+};
 
-} segment_state;
-
-class segmentControl
-{
+class segmentControl{
 
   private:
-    void lightNumber(const int &);
+    void lightNumber(const int &) const;
 
   public:
-    void switch_seg_States(time_compute *);
+    void switch_seg_States(const time_compute *, const segment_states &) const;
 };

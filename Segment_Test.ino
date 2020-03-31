@@ -1,15 +1,17 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
-#include "segment_control.h"
+#include "buttons.h"
 
-///#define DEBUG
+#define DEBUG true
 
 time_compute time_now;
 time_h initiate_time;
 segmentControl segContorl;
+ButtonAction buttonOps;
+segment_states segment_state;
 
-volatile int seconds_counter = 0, /// seconds  indicator
-             seconds_counter2 = 0;
+volatile int seconds_counter = 0; /// seconds  indicator
+volatile uint32_t seconds_counter2 = 0;
 
 ISR (TIMER1_OVF_vect)
 {
@@ -19,67 +21,94 @@ ISR (TIMER1_OVF_vect)
   ++seconds_counter;
   ++seconds_counter2;
 
-  if (seconds_counter >= 1000)
+  if (seconds_counter >= 1000)  /// 1 sec
   {
     segment_state.seconds_state = !segment_state.seconds_state;
-    ++time_now.time_seconds_value1;
     seconds_counter = 0;
-    initiate_time.count_timer(&time_now);
   } ////
 
-  seconds_counter2 = 0;
+  if (seconds_counter2 >= 60000)   /// 1min
+  {
+    seconds_counter2 = 0;
+    if (buttonOps.updateTimeStats() == false) 
+    {
+      ++time_now.time_min_value1;
+      initiate_time.count_timer(time_now);
+    }
+  }
+
   ++segment_state.switch_seg;
-  if (segment_state.switch_seg > 3)  segment_state.switch_seg = 0;
+  if (segment_state.switch_seg > segment_state.switch_value)  segment_state.switch_seg = segment_state.switch_lowest;
 
   switch (segment_state.switch_seg)
   {
     case 0:
-      segment_state.seconds1_state = 1;
-      segment_state.min1_state = 0;
-      segment_state.seconds2_state = 0;
+      segment_state.min1_state = 1;
       segment_state.min2_state = 0;
+      segment_state.hour1_state = 0;
+      segment_state.hour2_state = 0;
       break;
 
     case 1:
-      segment_state.seconds2_state = 1;
       segment_state.min1_state = 0;
-      segment_state.seconds1_state = 0;
-      segment_state.min2_state = 0;
+      segment_state.min2_state = 1;
+      segment_state.hour1_state = 0;
+      segment_state.hour2_state = 0;
       break;
 
     case 2:
-      segment_state.min1_state = 1;
-      segment_state.seconds2_state = 0;
-      segment_state.seconds1_state = 0;
+      segment_state.min1_state = 0;
       segment_state.min2_state = 0;
+      segment_state.hour1_state = 1;
+      segment_state.hour2_state = 0;
       break;
 
     case 3:
-      segment_state.min2_state = 1;
-      segment_state.seconds2_state = 0;
       segment_state.min1_state = 0;
-      segment_state.seconds1_state = 0;
+      segment_state.min2_state = 0;
+      segment_state.hour1_state = 0;
+      segment_state.hour2_state = 1;
       break;
 
+      default:
+      break;
   }
 
   digitalWrite(digit5, segment_state.seconds_state);  /// cursor
 
-  digitalWrite(digit1, segment_state.min2_state);
-  digitalWrite(digit2, segment_state.min1_state);
-  digitalWrite(digit4, segment_state.seconds1_state);
-  digitalWrite(digit3, segment_state.seconds2_state);
+  digitalWrite(digit1, segment_state.hour2_state);
+  digitalWrite(digit2, segment_state.hour1_state);
+  digitalWrite(digit4, segment_state.min1_state);
+  digitalWrite(digit3, segment_state.min2_state);
+
+  segContorl.switch_seg_States(&time_now, segment_state);
 
 }///<<
 
 void setup()
 {
+
+#if DEBUG
+  Serial.begin(9600);
+#endif
+
+  Wire.begin();
+
+  initiate_time.initial_time_set(&time_now);
+
+#if DEBUG
+  RTClib RTC;
+  DateTime now = RTC.now();
+  Serial.println(now.hour() - 12, DEC); /// 12 hour system...
+  Serial.println(now.minute(), DEC);
+  delay(2000);
+  Serial.println();
+#endif
+
   TCCR1A = 0x00; //normal mode
   TIMSK1 = (1 << TOIE1); //enable timer 1 OVERFLOW interrupt
   TCCR1B = (1 << CS12) | (1 << CS10); //set timer prescaler 1024 Prescalar selected
   TCNT1 = 65520;
-
-  ///Serial.begin(9600);
 
   pinMode(segA, OUTPUT);
   pinMode(segB, OUTPUT);
@@ -96,13 +125,24 @@ void setup()
   pinMode(digit4, OUTPUT);
   pinMode(digit5, OUTPUT);
 
-  digitalWrite(segDP, HIGH); /// cursor control//
+  pinMode(time_decr, INPUT);
+  pinMode(time_incr, INPUT);
+  pinMode(time_switch, INPUT);
+  pinMode(time_set, INPUT);
 
-  ///initiate_time.initial_time_set(&time_now);
+  digitalWrite(segDP, HIGH); /// cursor control//
 }
 
-void loop()
-{
-  segContorl.switch_seg_States(&time_now);
+void loop() {
+#if DEBUG
+  Serial.println(time_now.time_min_value1);
+  Serial.println(time_now.time_min_value2);
+  Serial.println(time_now.time_hr_value1);
+  Serial.println(time_now.time_hr_value2);
+  Serial.println();
+#endif
+
+  buttonOps.check_State(&initiate_time, &time_now, segment_state);
+  
 
 }///end of loop

@@ -1,19 +1,9 @@
 #include "segment_control.h"
 
-void segmentControl::switch_seg_States(time_compute *time_now)
+void segmentControl::switch_seg_States(const time_compute *time_now, const segment_states & segment_state) const
 {
 
-  if (segment_state.seconds1_state)
-  {
-    segmentControl::lightNumber(time_now->time_seconds_value1);
-  }
-
-  else if (segment_state.seconds2_state)
-  {
-    segmentControl::lightNumber(time_now->time_seconds_value2);
-  }
-
-  else if (segment_state.min1_state)
+  if (segment_state.min1_state)
   {
     segmentControl::lightNumber(time_now->time_min_value1);
   }
@@ -23,10 +13,20 @@ void segmentControl::switch_seg_States(time_compute *time_now)
     segmentControl::lightNumber(time_now->time_min_value2);
   }
 
+  else if (segment_state.hour1_state)
+  {
+    segmentControl::lightNumber(time_now->time_hr_value1);
+  }
+
+  else if (segment_state.hour2_state)
+  {
+    segmentControl::lightNumber(time_now->time_hr_value2);
+  }
+
 }///
 
 
-void segmentControl::lightNumber(const int &numberToDisplay)
+void segmentControl::lightNumber(const int &numberToDisplay) const
 {
 
 #define SEGMENT_ON  HIGH
