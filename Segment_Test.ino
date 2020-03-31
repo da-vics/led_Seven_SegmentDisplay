@@ -2,7 +2,7 @@
 #include <avr/interrupt.h>
 #include "buttons.h"
 
-#define DEBUG true
+#define DEBUG false
 
 time_compute time_now;
 time_h initiate_time;
