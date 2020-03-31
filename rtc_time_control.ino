@@ -46,13 +46,13 @@ void time_h::initial_time_set(time_compute *time_now)
 
 void time_h::setTime()
 {
-  Clock.setHour(_Hour+12);
+  Clock.setHour(_Hour + 12);
   Clock.setMinute(_Minute);
 }
 
-void time_h::filter_hour(time_compute *time_now){
+void time_h::filter_hour(time_compute *time_now) {
 
- if (this->_Hour < 10)
+  if (this->_Hour < 10)
   {
     time_now->time_hr_value1 = this->_Hour;
     time_now->time_hr_value2 = 0;
@@ -85,9 +85,9 @@ void time_h::filter_hour(time_compute *time_now){
 
 }
 
-void time_h::filter_min(time_compute *time_now){
+void time_h::filter_min(time_compute *time_now) {
 
- 
+
   if (this->_Minute < 10)
   {
     time_now->time_min_value1 = this->_Minute;

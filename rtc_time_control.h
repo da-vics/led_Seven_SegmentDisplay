@@ -7,16 +7,16 @@
 struct time_compute
 {
   volatile byte time_min_value1{0},
-       time_min_value2{0},
-       time_hr_value1{0},
-       time_hr_value2{0};
+           time_min_value2{0},
+           time_hr_value1{0},
+           time_hr_value2{0};
 
-volatile short temp_min{0},
-      temp_hr{0};
+  volatile short temp_min{0},
+           temp_hr{0};
 };
 
-class time_h{
-  
+class time_h {
+
   private:
     short _Hour;
     short _Minute;

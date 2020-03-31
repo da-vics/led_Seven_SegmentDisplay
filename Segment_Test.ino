@@ -30,7 +30,7 @@ ISR (TIMER1_OVF_vect)
   if (seconds_counter2 >= 60000)   /// 1min
   {
     seconds_counter2 = 0;
-    if (buttonOps.updateTimeStats() == false) 
+    if (buttonOps.updateTimeStats() == false)
     {
       ++time_now.time_min_value1;
       initiate_time.count_timer(time_now);
@@ -70,7 +70,7 @@ ISR (TIMER1_OVF_vect)
       segment_state.hour2_state = 1;
       break;
 
-      default:
+    default:
       break;
   }
 
@@ -143,6 +143,6 @@ void loop() {
 #endif
 
   buttonOps.check_State(&initiate_time, &time_now, segment_state);
-  
+
 
 }///end of loop

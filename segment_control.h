@@ -31,7 +31,7 @@ struct segment_states
            switch_lowest{0};
 };
 
-class segmentControl{
+class segmentControl {
 
   private:
     void lightNumber(const int &) const;
