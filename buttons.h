@@ -30,7 +30,7 @@ class ButtonAction {
 /*
   void milli(uint16_t x)
   {
-  unsigned long tim = 0;
+  unsigned long tim = millis();
 
   while (1)
   {
