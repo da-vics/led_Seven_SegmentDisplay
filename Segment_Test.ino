@@ -27,6 +27,7 @@ ISR (TIMER1_OVF_vect)
     seconds_counter = 0;
   } ////
 
+<<<<<<< HEAD
   if (seconds_counter2 >= 60000)   /// 1min
   {
     seconds_counter2 = 0;
@@ -36,6 +37,14 @@ ISR (TIMER1_OVF_vect)
       initiate_time.count_timer(time_now);
     }
   }
+=======
+
+  ///if (seconds2_counter >= 10){
+    seconds2_counter = 0;
+    ++switch_seg;
+    if (switch_seg > 3)  switch_seg = 0;
+  ///}
+>>>>>>> chan
 
   ++segment_state.switch_seg;
   if (segment_state.switch_seg > segment_state.switch_value)  segment_state.switch_seg = segment_state.switch_lowest;
@@ -109,7 +118,6 @@ void setup()
   TIMSK1 = (1 << TOIE1); //enable timer 1 OVERFLOW interrupt
   TCCR1B = (1 << CS12) | (1 << CS10); //set timer prescaler 1024 Prescalar selected
   TCNT1 = 65520;
-
   pinMode(segA, OUTPUT);
   pinMode(segB, OUTPUT);
   pinMode(segC, OUTPUT);
