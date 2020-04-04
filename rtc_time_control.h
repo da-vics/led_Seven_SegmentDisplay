@@ -4,8 +4,7 @@
 #include "DS3231.h"
 #include <DS3231.h>
 
-struct time_compute
-{
+struct time_compute{
   volatile byte time_min_value1{0},
            time_min_value2{0},
            time_hr_value1{0},
@@ -28,13 +27,11 @@ class time_h {
     void filter_min(time_compute *);
     void filter_hour(time_compute *);
 
-    void SetHour(const short Hour)
-    {
+    void SetHour(const short Hour){
       this->_Hour = Hour;
     }
 
-    void SetMin(const short Minute)
-    {
+    void SetMin(const short Minute){
       this->_Minute = Minute;
     }
 };
