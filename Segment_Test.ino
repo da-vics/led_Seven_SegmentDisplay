@@ -13,22 +13,20 @@ segment_states segment_state;
 volatile int seconds_counter = 0; /// seconds  indicator
 volatile uint32_t seconds_counter2 = 0;
 
-ISR (TIMER1_OVF_vect)
-{
+ISR (TIMER1_OVF_vect) {
   ///TCNT1 = 49910;
   TCNT1 = 65520;       /// 1 milli_seconds overflow
 
   ++seconds_counter;
-  ++seconds_counter2;
 
-  if (seconds_counter >= 1000)  /// 1 sec
-  {
+  (buttonOps.updateTimeStats() == false) ? ++seconds_counter2 : seconds_counter2;
+
+  if (seconds_counter >= 1000) { /// 1 sec
     segment_state.seconds_state = !segment_state.seconds_state;
     seconds_counter = 0;
   } ////
 
-  if (seconds_counter2 >= 60000)   /// 1min
-  {
+  if (seconds_counter2 >= 60000) {  /// 1min
     seconds_counter2 = 0;
     if (buttonOps.updateTimeStats() == false)
     {
@@ -40,8 +38,7 @@ ISR (TIMER1_OVF_vect)
   ++segment_state.switch_seg;
   if (segment_state.switch_seg > segment_state.switch_value)  segment_state.switch_seg = segment_state.switch_lowest;
 
-  switch (segment_state.switch_seg)
-  {
+  switch (segment_state.switch_seg) {
     case 0:
       segment_state.min1_state = 1;
       segment_state.min2_state = 0;
@@ -85,8 +82,7 @@ ISR (TIMER1_OVF_vect)
 
 }///<<
 
-void setup()
-{
+void setup() {
 
 #if DEBUG
   Serial.begin(9600);
@@ -142,6 +138,5 @@ void loop() {
 #endif
 
   buttonOps.check_State(&initiate_time, &time_now, segment_state);
-
 
 }///end of loop

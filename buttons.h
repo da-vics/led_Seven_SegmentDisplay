@@ -16,13 +16,11 @@ class ButtonAction {
   public:
     void check_State(time_h *, time_compute *, segment_states &);
 
-    bool updateTimeStats()
-    {
+    bool updateTimeStats() {
       return this->_time_set;
     }
 
-    void setTimeStats(bool time_set)
-    {
+    void setTimeStats(bool time_set) {
       this->_time_set = time_set;
     }
 };

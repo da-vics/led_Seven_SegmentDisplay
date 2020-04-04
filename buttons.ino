@@ -6,8 +6,7 @@ void ButtonAction::check_State(time_h *set_time, time_compute * time_now, segmen
     delay(800);
     this->setTimeStats(true);
 
-    while (ButtonAction::updateTimeStats())
-    {
+    while (this->updateTimeStats()) {
       this->Set_time(set_time, time_now, segment_state);
       this->setTimeStats(false);
       segment_state.switch_value = 3;
