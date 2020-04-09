@@ -19,7 +19,7 @@
 #define digit4 6  //Digit4
 #define digit5 5  //Secs
 
-struct segment_states{
+struct segment_states {
   volatile byte seconds_state{0}, /// for second indicator digital state
            hour1_state{0},
            hour2_state{0},
@@ -34,7 +34,17 @@ class segmentControl {
 
   private:
     void lightNumber(const int &) const;
+    time_compute *time_now{nullptr};
+    segment_states *segment_state{nullptr};
 
   public:
-    void switch_seg_States(const time_compute *, const segment_states &) const;
+
+    segmentControl(time_compute *time_n, segment_states *segment_st)
+    {
+      this->time_now = time_n;
+      this->segment_state = segment_st;
+    }
+
+    void clear_segments() const;
+    void switch_seg_States() const;
 };

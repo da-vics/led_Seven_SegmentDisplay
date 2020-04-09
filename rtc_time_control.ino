@@ -3,23 +3,23 @@
 DS3231 Clock;
 RTClib RTC;
 
-void time_h::count_timer(time_compute &time_now) {
-  if (time_now.time_min_value1 > 9) {
-    time_now.time_min_value1 = 0;
-    ++time_now.time_min_value2;
+void time_h::count_timer() {
+  if (time_now->time_min_value1 > 9) {
+    time_now->time_min_value1 = 0;
+    ++time_now->time_min_value2;
 
-    if (time_now.time_min_value2 > 5) {
-      time_now.time_min_value2 = 0;
-      ++time_now.time_hr_value1;
+    if (time_now->time_min_value2 > 5) {
+      time_now->time_min_value2 = 0;
+      ++time_now->time_hr_value1;
 
-      if (time_now.time_hr_value2 == 1 && time_now.time_hr_value1 > 2) {
-        time_now.time_hr_value1 = 0;
-        time_now.time_hr_value2 = 0;
+      if (time_now->time_hr_value2 == 1 && time_now->time_hr_value1 > 2) {
+        time_now->time_hr_value1 = 0;
+        time_now->time_hr_value2 = 0;
       }
 
-      else if (time_now.time_hr_value1 > 9) {
-        time_now.time_hr_value1 = 0;
-        ++time_now.time_hr_value2;
+      else if (time_now->time_hr_value1 > 9) {
+        time_now->time_hr_value1 = 0;
+        ++time_now->time_hr_value2;
       }///
 
     }///
@@ -27,14 +27,14 @@ void time_h::count_timer(time_compute &time_now) {
   }////
 }
 
-void time_h::initial_time_set(time_compute *time_now) {
+void time_h::initial_time_set() {
   Clock.setClockMode(false);
   DateTime now = RTC.now();
 
   this->_Hour = (short)now.hour() - 12; /// 12 hour system...
   this->_Minute = (short)now.minute();
-  this->filter_hour(time_now);
-  this->filter_min(time_now);
+  this->filter_hour();
+  this->filter_min();
 }
 
 void time_h::setTime() {
@@ -42,7 +42,7 @@ void time_h::setTime() {
   Clock.setMinute(_Minute);
 }
 
-void time_h::filter_hour(time_compute *time_now) {
+void time_h::filter_hour() {
 
   if (this->_Hour < 10) {
     time_now->time_hr_value1 = this->_Hour;
@@ -74,7 +74,7 @@ void time_h::filter_hour(time_compute *time_now) {
 
 }
 
-void time_h::filter_min(time_compute *time_now) {
+void time_h::filter_min() {
 
   if (this->_Minute < 10) {
     time_now->time_min_value1 = this->_Minute;

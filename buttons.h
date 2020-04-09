@@ -11,10 +11,20 @@ class ButtonAction {
 
   private:
     bool _time_set{false};
-    void Set_time(time_h *, time_compute *, segment_states &);
+    void Set_time();
+    time_h *set_time{nullptr};
+    time_compute *time_now{nullptr};
+    segment_states *segment_state{nullptr};
 
   public:
-    void check_State(time_h *, time_compute *, segment_states &);
+    void check_State();
+
+    ButtonAction(time_h *sett, time_compute *t_now, segment_states *seg_s)
+    {
+      this->set_time = sett;
+      this->time_now = t_now;
+      this->segment_state = seg_s;
+    }
 
     bool updateTimeStats() {
       return this->_time_set;

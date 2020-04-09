@@ -1,16 +1,16 @@
 #include "buttons.h"
 
-void ButtonAction::check_State(time_h *set_time, time_compute * time_now, segment_states &segment_state) {
+void ButtonAction::check_State() {
 
   if (digitalRead(time_set)) {
     delay(800);
     this->setTimeStats(true);
 
     while (this->updateTimeStats()) {
-      this->Set_time(set_time, time_now, segment_state);
+      this->Set_time();
       this->setTimeStats(false);
-      segment_state.switch_value = 3;
-      segment_state.switch_lowest = 0;
+      segment_state->switch_value = 3;
+      segment_state->switch_lowest = 0;
       break;
     }
 
@@ -18,18 +18,18 @@ void ButtonAction::check_State(time_h *set_time, time_compute * time_now, segmen
 
 } ///
 
-void ButtonAction::Set_time(time_h *set_time, time_compute * time_now, segment_states &segment_state) {
+void ButtonAction::Set_time() {
 
-  segment_state.hour2_state = 0;
-  segment_state.hour1_state = 0;
-  segment_state.min1_state = 0;
-  segment_state.min2_state = 0;
+  segment_state->hour2_state = 0;
+  segment_state->hour1_state = 0;
+  segment_state->min1_state = 0;
+  segment_state->min2_state = 0;
 
-  segment_state.switch_seg = 0;
-  segment_state.switch_value = 1;
-  segment_state.switch_lowest = 0;
+  segment_state->switch_seg = 0;
+  segment_state->switch_value = 1;
+  segment_state->switch_lowest = 0;
 
-  set_time->initial_time_set(time_now);
+  set_time->initial_time_set();
 
   volatile byte index = 1;
 
@@ -38,10 +38,10 @@ void ButtonAction::Set_time(time_h *set_time, time_compute * time_now, segment_s
 
 #if DEBUG
     Serial.println("Inside!");
-    Serial.println(segment_state.hour2_state);
-    Serial.println(segment_state.hour1_state);
-    Serial.println(segment_state.min1_state);
-    Serial.println(segment_state.min2_state);
+    Serial.println(segment_state->hour2_state);
+    Serial.println(segment_state->hour1_state);
+    Serial.println(segment_state->min1_state);
+    Serial.println(segment_state->min2_state);
 #endif
 
     if (digitalRead(time_incr)) {
@@ -52,13 +52,13 @@ void ButtonAction::Set_time(time_h *set_time, time_compute * time_now, segment_s
         case 1:
           ((time_now->temp_min) < 59) ? ++time_now->temp_min : time_now->temp_min = 0;
           set_time->SetMin(time_now->temp_min);
-          set_time->filter_min(time_now);
+          set_time->filter_min();
           break;
 
         case 2:
           ((time_now->temp_hr) < 12) ? ++time_now->temp_hr : time_now->temp_hr = 0;
           set_time->SetHour(time_now->temp_hr);
-          set_time->filter_hour(time_now);
+          set_time->filter_hour();
           break;
 
         default:
@@ -79,13 +79,13 @@ void ButtonAction::Set_time(time_h *set_time, time_compute * time_now, segment_s
         case 1:
           ((time_now->temp_min) > 0) ? --time_now->temp_min : time_now->temp_min = 59;
           set_time->SetMin(time_now->temp_min);
-          set_time->filter_min(time_now);
+          set_time->filter_min();
           break;
 
         case 2:
           ((time_now->temp_hr) > 0) ? --time_now->temp_hr : time_now->temp_hr = 12;
           set_time->SetHour(time_now->temp_hr);
-          set_time->filter_hour(time_now);
+          set_time->filter_hour();
           break;
 
         default:
@@ -112,15 +112,15 @@ void ButtonAction::Set_time(time_h *set_time, time_compute * time_now, segment_s
       switch (index)
       {
         case 1:
-          segment_state.switch_seg = 0;
-          segment_state.switch_value = 1;
-          segment_state.switch_lowest = 0;
+          segment_state->switch_seg = 0;
+          segment_state->switch_value = 1;
+          segment_state->switch_lowest = 0;
           break;
 
         case 2:
-          segment_state.switch_seg = 2;
-          segment_state.switch_value = 3;
-          segment_state.switch_lowest = 2;
+          segment_state->switch_seg = 2;
+          segment_state->switch_value = 3;
+          segment_state->switch_lowest = 2;
           break;
 
         default:

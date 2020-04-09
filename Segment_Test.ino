@@ -5,19 +5,22 @@
 #define DEBUG false
 
 time_compute time_now;
-time_h initiate_time;
-segmentControl segContorl;
-ButtonAction buttonOps;
 segment_states segment_state;
+segmentControl segContorl(&time_now, &segment_state);
+time_h initiate_time(&time_now);
+ButtonAction buttonOps(&initiate_time, &time_now, &segment_state);
 
 volatile int seconds_counter = 0; /// seconds  indicator
 volatile uint32_t seconds_counter2 = 0;
+volatile int seconds_temp = 0;
 
 ISR (TIMER1_OVF_vect) {
   ///TCNT1 = 49910;
   TCNT1 = 65520;       /// 1 milli_seconds overflow
 
+  ///TCNT1 = 65534 100us
   ++seconds_counter;
+  ++seconds_temp;
 
   (buttonOps.updateTimeStats() == false) ? ++seconds_counter2 : seconds_counter2;
 
@@ -31,45 +34,50 @@ ISR (TIMER1_OVF_vect) {
     if (buttonOps.updateTimeStats() == false)
     {
       ++time_now.time_min_value1;
-      initiate_time.count_timer(time_now);
+      initiate_time.count_timer();
     }
   }
 
-  ++segment_state.switch_seg;
-  if (segment_state.switch_seg > segment_state.switch_value)  segment_state.switch_seg = segment_state.switch_lowest;
+  if (seconds_temp >= 3) {
+    seconds_temp = 0;
+    ++segment_state.switch_seg;
+    if (segment_state.switch_seg > segment_state.switch_value)  segment_state.switch_seg = segment_state.switch_lowest;
 
-  switch (segment_state.switch_seg) {
-    case 0:
-      segment_state.min1_state = 1;
-      segment_state.min2_state = 0;
-      segment_state.hour1_state = 0;
-      segment_state.hour2_state = 0;
-      break;
+    switch (segment_state.switch_seg) {
+      case 0:
+        segment_state.min1_state = 1;
+        segment_state.min2_state = 0;
+        segment_state.hour1_state = 0;
+        segment_state.hour2_state = 0;
+        break;
 
-    case 1:
-      segment_state.min1_state = 0;
-      segment_state.min2_state = 1;
-      segment_state.hour1_state = 0;
-      segment_state.hour2_state = 0;
-      break;
+      case 1:
+        segment_state.min1_state = 0;
+        segment_state.min2_state = 1;
+        segment_state.hour1_state = 0;
+        segment_state.hour2_state = 0;
+        break;
 
-    case 2:
-      segment_state.min1_state = 0;
-      segment_state.min2_state = 0;
-      segment_state.hour1_state = 1;
-      segment_state.hour2_state = 0;
-      break;
+      case 2:
+        segment_state.min1_state = 0;
+        segment_state.min2_state = 0;
+        segment_state.hour1_state = 1;
+        segment_state.hour2_state = 0;
+        break;
 
-    case 3:
-      segment_state.min1_state = 0;
-      segment_state.min2_state = 0;
-      segment_state.hour1_state = 0;
-      segment_state.hour2_state = 1;
-      break;
+      case 3:
+        segment_state.min1_state = 0;
+        segment_state.min2_state = 0;
+        segment_state.hour1_state = 0;
+        segment_state.hour2_state = 1;
+        break;
 
-    default:
-      break;
+      default:
+        break;
+    }
   }
+
+  segContorl.clear_segments();
 
   digitalWrite(digit5, segment_state.seconds_state);  /// cursor
 
@@ -78,7 +86,7 @@ ISR (TIMER1_OVF_vect) {
   digitalWrite(digit4, segment_state.min1_state);
   digitalWrite(digit3, segment_state.min2_state);
 
-  segContorl.switch_seg_States(&time_now, segment_state);
+  segContorl.switch_seg_States();
 
 }///<<
 
@@ -90,7 +98,7 @@ void setup() {
 
   Wire.begin();
 
-  initiate_time.initial_time_set(&time_now);
+  initiate_time.initial_time_set();
 
 #if DEBUG
   RTClib RTC;
@@ -137,6 +145,6 @@ void loop() {
   Serial.println();
 #endif
 
-  buttonOps.check_State(&initiate_time, &time_now, segment_state);
+  buttonOps.check_State();
 
 }///end of loop
