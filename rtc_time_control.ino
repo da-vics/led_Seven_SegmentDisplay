@@ -35,8 +35,8 @@ void time_h::initial_time_set() {
   this->_Minute = (short)now.minute();
 
   time_now->temp_min = this->_Minute;
-   time_now->temp_hr = this->_Hour;
-   
+  time_now->temp_hr = this->_Hour;
+
   this->filter_hour();
   this->filter_min();
 }
