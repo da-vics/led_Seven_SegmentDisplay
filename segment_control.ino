@@ -34,40 +34,40 @@ void segmentControl::clear_segments() const
 
 }
 
-void segmentControl::segFastSwitch(){
+void segmentControl::segFastSwitch() {
 
-     switch (segment_state->switch_seg) {
-      case 0:
-        segment_state->min1_state = 1;
-        segment_state->min2_state = 0;
-        segment_state->hour1_state = 0;
-        segment_state->hour2_state = 0;
-        break;
+  switch (segment_state->switch_seg) {
+    case 0:
+      segment_state->min1_state = 1;
+      segment_state->min2_state = 0;
+      segment_state->hour1_state = 0;
+      segment_state->hour2_state = 0;
+      break;
 
-      case 1:
-        segment_state->min1_state = 0;
-        segment_state->min2_state = 1;
-        segment_state->hour1_state = 0;
-        segment_state->hour2_state = 0;
-        break;
+    case 1:
+      segment_state->min1_state = 0;
+      segment_state->min2_state = 1;
+      segment_state->hour1_state = 0;
+      segment_state->hour2_state = 0;
+      break;
 
-      case 2:
-        segment_state->min1_state = 0;
-        segment_state->min2_state = 0;
-        segment_state->hour1_state = 1;
-        segment_state->hour2_state = 0;
-        break;
-        
-      case 3:
-        segment_state->min1_state = 0;
-        segment_state->min2_state = 0;
-        segment_state->hour1_state = 0;
-        segment_state->hour2_state = 1;
-        break;
+    case 2:
+      segment_state->min1_state = 0;
+      segment_state->min2_state = 0;
+      segment_state->hour1_state = 1;
+      segment_state->hour2_state = 0;
+      break;
 
-      default:
-        break;
-    }
+    case 3:
+      segment_state->min1_state = 0;
+      segment_state->min2_state = 0;
+      segment_state->hour1_state = 0;
+      segment_state->hour2_state = 1;
+      break;
+
+    default:
+      break;
+  }
 
 }
 

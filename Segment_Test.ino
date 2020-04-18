@@ -42,9 +42,9 @@ ISR (TIMER1_OVF_vect) {
     seconds_temp = 0;
     ++segment_state.switch_seg;
     if (segment_state.switch_seg > segment_state.switch_value)  segment_state.switch_seg = segment_state.switch_lowest;
-    
- segContorl.segFastSwitch();
- 
+
+    segContorl.segFastSwitch();
+
   }
 
   segContorl.clear_segments();
