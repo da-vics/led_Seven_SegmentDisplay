@@ -62,22 +62,9 @@ ISR (TIMER1_OVF_vect) {
 
 void setup() {
 
-#if DEBUG
-  Serial.begin(9600);
-#endif
-
   Wire.begin();
 
   initiate_time.initial_time_set();
-
-#if DEBUG
-  RTClib RTC;
-  DateTime now = RTC.now();
-  Serial.println(now.hour() - 12, DEC); /// 12 hour system...
-  Serial.println(now.minute(), DEC);
-  delay(2000);
-  Serial.println();
-#endif
 
   TCCR1A = 0x00; //normal mode
   TIMSK1 = (1 << TOIE1); //enable timer 1 OVERFLOW interrupt
@@ -107,13 +94,6 @@ void setup() {
 }
 
 void loop() {
-#if DEBUG
-  Serial.println(time_now.time_min_value1);
-  Serial.println(time_now.time_min_value2);
-  Serial.println(time_now.time_hr_value1);
-  Serial.println(time_now.time_hr_value2);
-  Serial.println();
-#endif
 
   buttonOps.check_State();
 

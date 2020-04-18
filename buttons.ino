@@ -36,14 +36,6 @@ void ButtonAction::Set_time() {
   bool done = false;
   while (!done) {
 
-#if DEBUG
-    Serial.println("Inside!");
-    Serial.println(segment_state->hour2_state);
-    Serial.println(segment_state->hour1_state);
-    Serial.println(segment_state->min1_state);
-    Serial.println(segment_state->min2_state);
-#endif
-
     if (digitalRead(time_incr)) {
       delay(800);
 
@@ -65,11 +57,6 @@ void ButtonAction::Set_time() {
           break;
       }///
 
-#if DEBUG
-      Serial.println("incrementing...");
-      Serial.println(time_now->temp_min);
-      Serial.println(time_now->temp_hr);
-#endif
     }
 
     else if (digitalRead(time_decr)) {
@@ -91,11 +78,6 @@ void ButtonAction::Set_time() {
         default:
           break;
       }///
-#if DEBUG
-      Serial.println("decrementing...");
-      Serial.println(time_now->temp_min);
-      Serial.println(time_now->temp_hr);
-#endif
     }
 
     else if (digitalRead(time_set)) {
@@ -126,11 +108,6 @@ void ButtonAction::Set_time() {
         default:
           break;
       }
-
-#if DEBUG
-      Serial.println("set active:");
-      Serial.println(index);
-#endif
     }
 
   }/// done
