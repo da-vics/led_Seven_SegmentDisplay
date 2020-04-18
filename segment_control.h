@@ -47,4 +47,5 @@ class segmentControl {
 
     void clear_segments() const;
     void switch_seg_States() const;
+    void segFastSwitch();
 };

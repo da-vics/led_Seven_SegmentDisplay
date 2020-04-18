@@ -42,39 +42,9 @@ ISR (TIMER1_OVF_vect) {
     seconds_temp = 0;
     ++segment_state.switch_seg;
     if (segment_state.switch_seg > segment_state.switch_value)  segment_state.switch_seg = segment_state.switch_lowest;
-
-    switch (segment_state.switch_seg) {
-      case 0:
-        segment_state.min1_state = 1;
-        segment_state.min2_state = 0;
-        segment_state.hour1_state = 0;
-        segment_state.hour2_state = 0;
-        break;
-
-      case 1:
-        segment_state.min1_state = 0;
-        segment_state.min2_state = 1;
-        segment_state.hour1_state = 0;
-        segment_state.hour2_state = 0;
-        break;
-
-      case 2:
-        segment_state.min1_state = 0;
-        segment_state.min2_state = 0;
-        segment_state.hour1_state = 1;
-        segment_state.hour2_state = 0;
-        break;
-
-      case 3:
-        segment_state.min1_state = 0;
-        segment_state.min2_state = 0;
-        segment_state.hour1_state = 0;
-        segment_state.hour2_state = 1;
-        break;
-
-      default:
-        break;
-    }
+    
+ segContorl.segFastSwitch();
+ 
   }
 
   segContorl.clear_segments();
